@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MasterItemsController;
+use App\Http\Controllers\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,20 +24,38 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/master-items', [App\Http\Controllers\MasterItemsController::class, 'index']);
-Route::get('/master-items/search', [App\Http\Controllers\MasterItemsController::class, 'search']);
-Route::get('/master-items/form/{method}/{id?}', [App\Http\Controllers\MasterItemsController::class, 'formView']);
-Route::post('/master-items/form/{method}/{id?}', [App\Http\Controllers\MasterItemsController::class, 'formSubmit']);
+/*
+|--------------------------------------------------------------------------
+| Master Items
+|--------------------------------------------------------------------------
+*/
+Route::prefix('master-items')->controller(MasterItemsController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/search', 'search');
 
-Route::get('/master-items/view/{kode}', [App\Http\Controllers\MasterItemsController::class, 'singleView']);
-Route::get('/master-items/delete/{id}', [App\Http\Controllers\MasterItemsController::class, 'delete']);
+    Route::get('/form/{method}/{id?}', 'formView');
+    Route::post('/form/{method}/{id?}', 'formSubmit');
 
+    Route::get('/view/{kode}', 'singleView');
+    Route::get('/delete/{id}', 'delete');
 
-Route::get('/master-items/update-random-data', [App\Http\Controllers\MasterItemsController::class, 'updateRandomData']);
-// Kategori routes
-Route::get('/kategori', [App\Http\Controllers\KategoriController::class, 'index']);
-Route::get('/kategori/search', [App\Http\Controllers\KategoriController::class, 'search']);
-Route::get('/kategori/form/{method}/{id?}', [App\Http\Controllers\KategoriController::class, 'formView']);
-Route::post('/kategori/form/{method}/{id?}', [App\Http\Controllers\KategoriController::class, 'formSubmit']);
-Route::get('/kategori/view/{kode}', [App\Http\Controllers\KategoriController::class, 'singleView']);
-Route::get('/kategori/delete/{id}', [App\Http\Controllers\KategoriController::class, 'delete']);
+    Route::get('/update-random-data', 'updateRandomData');
+    Route::get('/export', 'exportExcel');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Kategori
+|--------------------------------------------------------------------------
+*/
+Route::prefix('kategori')->controller(KategoriController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/search', 'search');
+
+    Route::get('/form/{method}/{id?}', 'formView');
+    Route::post('/form/{method}/{id?}', 'formSubmit');
+
+    Route::get('/view/{kode}', 'singleView');
+    Route::get('/delete/{id}', 'delete');
+    Route::get('/print/{kode}', 'printPdf');
+});

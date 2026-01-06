@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\MasterItem;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Exports\MasterItemsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MasterItemsController extends Controller
 {
@@ -127,6 +129,13 @@ class MasterItemsController extends Controller
             $item->jenis = $this->getRandomJenis();
             $item->save();
         }
+    }
+
+    public function exportExcel()
+    {
+        // Export master items to Excel (requires maatwebsite/excel package)
+        $fileName = 'master_items_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new MasterItemsExport, $fileName);
     }
 
     private function getRandomSupplier()

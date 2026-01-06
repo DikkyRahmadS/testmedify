@@ -16,6 +16,8 @@
                 @endif
 
                 <div class="card-body">
+                    {{-- Select2 CSS (loaded here for the form) --}}
+                    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
                     @include('master_items.form.form')
                 </div>
             </div>
@@ -24,4 +26,20 @@
 </div>
 @endsection
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // initialize select2 for kategori select
+            var el = document.querySelectorAll('.select2-kategori');
+            if (el && el.length) {
+                el.forEach(function(node){
+                    $(node).select2({
+                        placeholder: 'Pilih kategori',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                });
+            }
+        });
+    </script>
 @endsection

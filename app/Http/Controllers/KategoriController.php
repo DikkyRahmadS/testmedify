@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use App\Models\MasterItem;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KategoriController extends Controller
 {
@@ -68,6 +69,29 @@ class KategoriController extends Controller
         }
 
         return view('kategori.single.index', ['kategori' => $kategori, 'items' => $items]);
+    }
+
+    public function printPdf($kode)
+    {
+        // load kategori with items
+        $kategori = Kategori::with(['master_items' => function ($q) {
+            $q->select('master_items.id','master_items.kode','master_items.nama','master_items.harga_beli');
+        }])->where('kode', $kode)->first();
+
+        if (!$kategori) {
+            return redirect('/kategori')->with('error', 'Kategori tidak ditemukan');
+        }
+
+        $data = [
+            'kategori' => $kategori,
+            'items' => $kategori->master_items,
+            'printed_at' => now()->format('d-m-Y H:i:s'),
+        ];
+
+        $pdf = Pdf::loadView('kategori.single.print', $data)->setPaper('a4', 'portrait');
+
+        $fileName = 'kategori_' . $kategori->kode . '.pdf';
+        return $pdf->download($fileName);
     }
 
     public function delete($id)

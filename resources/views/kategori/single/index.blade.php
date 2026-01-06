@@ -24,6 +24,10 @@
                         </tr>
                     </table>
 
+                    <div class="mt-3">
+                        <a href="{{ url('/kategori/print/' . ($kategori->kode ?? '')) }}" class="btn btn-success">Download PDF</a>
+                    </div>
+
                     <h5 class="mt-3">Daftar Item pada Kategori ini</h5>
                     @if(count($items) > 0)
                         <ul>

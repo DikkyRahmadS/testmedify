@@ -57,7 +57,7 @@
 
     <div class="form-group">
         <label>Kategori</label>
-        <select class="form-control" name="kategori[]" multiple>
+        <select class="form-control select2-kategori" name="kategori[]" multiple>
             @foreach($categories as $cat)
                 <option value="{{ $cat->id }}" @if(in_array($cat->id, $selectedKategoris)) selected @endif>{{ $cat->nama }} ({{ $cat->kode }})</option>
             @endforeach
