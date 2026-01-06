@@ -21,7 +21,7 @@
     })
 
     function getData(){
-        
+
         $('#loading-filter').show();
         var dataTableObj = $('#table').DataTable();
         var filter_kode = $('#filter-kode').val()
@@ -48,8 +48,17 @@
                     var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`
 
                     $.each(item, function(obj_name, obj_value) {
-                        if (obj_name == 'laba') return false;
-                        array_temp.push(obj_value)
+                            if (obj_name == 'laba') return false;
+                            if (obj_name == 'foto') {
+                                if (obj_value) {
+                                    var img = `<img src="{{ asset('storage') }}/` + obj_value + `" style="max-width:100px; max-height:100px;" />`;
+                                    array_temp.push(img);
+                                } else {
+                                    array_temp.push('-');
+                                }
+                                return;
+                            }
+                            array_temp.push(obj_value)
                     })
                     array_temp.push(harga_jual)
                     array_temp.push(item.supplier)

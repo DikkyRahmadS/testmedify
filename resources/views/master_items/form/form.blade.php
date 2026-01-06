@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     @if($method == 'edit')
     <div class="form-group">
@@ -46,6 +46,16 @@
             <optio @if($selected == 'Umum') selected @endif>Umum</option>
             <optio @if($selected == 'ATK') selected @endif>ATK</option>
         </select>
+    </div>
+
+    <div class="form-group">
+        <label>Foto</label>
+        @if(!empty($item->foto))
+            <div class="mb-2">
+                <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto" style="max-width:150px; max-height:150px;" />
+            </div>
+        @endif
+        <input type="file" class="form-control" name="foto" accept="image/*">
     </div>
 
     <button class="btn btn-primary mt-3">Submit</button>

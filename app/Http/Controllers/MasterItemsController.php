@@ -25,7 +25,7 @@ class MasterItemsController extends Controller
         if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
         if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin)->where('harga_beli', '<=', $hargamax);
 
-        $data_search = $data_search->select('kode', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
+        $data_search = $data_search->select('kode', 'foto', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
 
 
         return json_encode([
@@ -63,6 +63,19 @@ class MasterItemsController extends Controller
         } else {
             $data_item = MasterItem::find($id);
             $kode = $data_item->kode;
+        }
+
+        // handle file upload for foto
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            if ($file->isValid()) {
+                // delete old foto if exists
+                if (!empty($data_item->foto) && \Illuminate\Support\Facades\Storage::disk('public')->exists($data_item->foto)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($data_item->foto);
+                }
+                $path = $file->store('master_items', 'public');
+                $data_item->foto = $path;
+            }
         }
 
         $data_item->nama = $request->nama;
