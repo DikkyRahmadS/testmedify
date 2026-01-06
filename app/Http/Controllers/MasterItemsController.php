@@ -24,7 +24,7 @@ class MasterItemsController extends Controller
         // Use Eloquent with eager loading and conditional filters
         $data_search = MasterItem::with('kategoris')
             ->when($kode !== null && $kode !== '', function ($q) use ($kode) {
-                $q->where('kode', $kode);
+                $q->where('kode', 'LIKE', '%' . $kode . '%');
             })
             ->when($nama !== null && $nama !== '', function ($q) use ($nama) {
                 $q->where('nama', 'LIKE', '%' . $nama . '%');

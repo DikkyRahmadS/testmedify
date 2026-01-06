@@ -38,9 +38,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/kategori') }}">Kategori</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/master-items/export') }}">Export Items (Excel)</a>
-                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

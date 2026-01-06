@@ -21,7 +21,7 @@ class KategoriController extends Controller
 
         // Use Eloquent conditional filters (`when`) for readability and safety
         $data = Kategori::when($kode !== null && $kode !== '', function ($q) use ($kode) {
-                $q->where('kode', $kode);
+                $q->where('kode', 'LIKE', '%' . $kode . '%');
             })
             ->when($nama !== null && $nama !== '', function ($q) use ($nama) {
                 $q->where('nama', 'LIKE', '%' . $nama . '%');
