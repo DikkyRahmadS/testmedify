@@ -4,8 +4,13 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="form-group mb-2">
-                <a href="{{ url('/kategori') }}" class="btn btn-secondary">Kembali ke Daftar Kategori</a>
+            <div class="form-group mb-2 d-flex justify-content-between">
+                <div>
+                    <a href="{{ url('/kategori') }}" class="btn btn-secondary">Kembali ke Daftar Kategori</a>
+                </div>
+                <div>
+                    <a href="{{ url('/kategori/print/' . ($kategori->kode ?? '')) }}" class="btn btn-success">Download PDF</a>
+                </div>
             </div>
             <div class="card">
                 <div class="card-header">Kategori: {{ $kategori->nama ?? '-' }}</div>
@@ -23,10 +28,6 @@
                             <td>{{ $kategori->nama ?? '-' }}</td>
                         </tr>
                     </table>
-
-                    <div class="mt-3">
-                        <a href="{{ url('/kategori/print/' . ($kategori->kode ?? '')) }}" class="btn btn-success">Download PDF</a>
-                    </div>
 
                     <h5 class="mt-3">Daftar Item pada Kategori ini</h5>
                     @if(count($items) > 0)

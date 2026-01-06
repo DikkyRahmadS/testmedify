@@ -5,8 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="form-group mb-2">
-                <a href="{{url('master-items/form/new')}}" class="btn btn-secondary">+ Master Items Baru</a>
-                <a href="{{ url('/master-items/export') }}" class="btn btn-success"> Export Data Master (Excel)</a>
+                <div class="form-group mb-2 d-flex justify-content-between">
+                    <div>
+                        <a href="{{url('master-items/form/new')}}" class="btn btn-secondary">+ Master Items Baru</a>
+                    </div>
+                    <div>
+                        <a href="{{ url('/master-items/export') }}" class="btn btn-success"> Export Data Master (Excel)</a>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-header">Daftar Master Items</div>
