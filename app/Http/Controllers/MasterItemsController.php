@@ -23,7 +23,15 @@ class MasterItemsController extends Controller
 
         if (!empty($kode)) $data_search = $data_search->where('kode', $kode);
         if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
-        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin)->where('harga_beli', '<=', $hargamax);
+        // handle harga range filters separately to avoid passing null to where()
+        if (!empty($hargamin) || !empty($hargamax)) {
+            if ($hargamin !== null && $hargamin !== '') {
+                $data_search = $data_search->where('harga_beli', '>=', $hargamin);
+            }
+            if ($hargamax !== null && $hargamax !== '') {
+                $data_search = $data_search->where('harga_beli', '<=', $hargamax);
+            }
+        }
 
         $data_search = $data_search->select('kode', 'foto', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
 
