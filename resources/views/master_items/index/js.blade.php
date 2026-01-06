@@ -40,30 +40,37 @@
                 var data = results.data
 
                 $.each(data, function(index, item) {
-                    array_temp = [];
                     var harga_jual = item.harga_beli + item.harga_beli * item.laba / 100;
-                    harga_jual = Math.round(harga_jual)
+                    harga_jual = Math.round(harga_jual);
                     var kode = item.kode;
 
-                    var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`
+                    var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`;
 
-                    $.each(item, function(obj_name, obj_value) {
-                            if (obj_name == 'laba') return false;
-                            if (obj_name == 'foto') {
-                                if (obj_value) {
-                                    var img = `<img src="{{ asset('storage') }}/` + obj_value + `" style="max-width:100px; max-height:100px;" />`;
-                                    array_temp.push(img);
-                                } else {
-                                    array_temp.push('-');
-                                }
-                                return;
-                            }
-                            array_temp.push(obj_value)
-                    })
-                    array_temp.push(harga_jual)
-                    array_temp.push(item.supplier)
-                    array_temp.push(html)
+                    // foto
+                    var fotoHtml = '-';
+                    if (item.foto) {
+                        fotoHtml = `<img src="{{ asset('storage') }}/` + item.foto + `" style="max-width:100px; max-height:100px;" />`;
+                    }
 
+                    // kategori (many-to-many)
+                    var kategoriHtml = '-';
+                    if (item.kategoris && item.kategoris.length) {
+                        kategoriHtml = '';
+                        $.each(item.kategoris, function(i, c) {
+                            kategoriHtml += `<span class="badge bg-secondary me-1">` + (c.nama || c.name || '') + `</span>`;
+                        });
+                    }
+
+                    var array_temp = [];
+                    array_temp.push(item.kode);
+                    array_temp.push(fotoHtml);
+                    array_temp.push(item.nama);
+                    array_temp.push(kategoriHtml);
+                    array_temp.push(item.jenis);
+                    array_temp.push(item.harga_beli);
+                    array_temp.push(harga_jual);
+                    array_temp.push(item.supplier);
+                    array_temp.push(html);
 
                     dataTableObj.row.add(array_temp).draw(true);
                 });

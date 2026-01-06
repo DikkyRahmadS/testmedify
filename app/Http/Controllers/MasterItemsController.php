@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MasterItem;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class MasterItemsController extends Controller
@@ -18,25 +19,24 @@ class MasterItemsController extends Controller
         $nama = $request->nama;
         $hargamin = $request->hargamin;
         $hargamax = $request->hargamax;
+        // Use Eloquent with eager loading and conditional filters
+        $data_search = MasterItem::with('kategoris')
+            ->when($kode !== null && $kode !== '', function ($q) use ($kode) {
+                $q->where('kode', $kode);
+            })
+            ->when($nama !== null && $nama !== '', function ($q) use ($nama) {
+                $q->where('nama', 'LIKE', '%' . $nama . '%');
+            })
+            ->when($hargamin !== null && $hargamin !== '', function ($q) use ($hargamin) {
+                $q->where('harga_beli', '>=', $hargamin);
+            })
+            ->when($hargamax !== null && $hargamax !== '', function ($q) use ($hargamax) {
+                $q->where('harga_beli', '<=', $hargamax);
+            })
+            ->orderBy('id')
+            ->get(['id','kode', 'foto', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier']);
 
-        $data_search = MasterItem::query();
-
-        if (!empty($kode)) $data_search = $data_search->where('kode', $kode);
-        if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
-        // handle harga range filters separately to avoid passing null to where()
-        if (!empty($hargamin) || !empty($hargamax)) {
-            if ($hargamin !== null && $hargamin !== '') {
-                $data_search = $data_search->where('harga_beli', '>=', $hargamin);
-            }
-            if ($hargamax !== null && $hargamax !== '') {
-                $data_search = $data_search->where('harga_beli', '<=', $hargamax);
-            }
-        }
-
-        $data_search = $data_search->select('kode', 'foto', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
-
-
-        return json_encode([
+        return response()->json([
             'status' => 200,
             'data' => $data_search
         ]);
@@ -49,8 +49,10 @@ class MasterItemsController extends Controller
         } else {
             $item = MasterItem::find($id);
         }
+        $categories = Kategori::orderBy('nama')->get();
         $data['item'] = $item;
         $data['method'] = $method;
+        $data['categories'] = $categories;
         return view('master_items.form.index', $data);
     }
 
@@ -93,6 +95,13 @@ class MasterItemsController extends Controller
         $data_item->supplier = $request->supplier;
         $data_item->jenis = $request->jenis;
         $data_item->save();
+
+        // sync kategori many-to-many
+        $kategoriIds = $request->input('kategori', []);
+        if (!is_array($kategoriIds)) {
+            $kategoriIds = [];
+        }
+        $data_item->kategoris()->sync($kategoriIds);
 
         return redirect('master-items');
     }

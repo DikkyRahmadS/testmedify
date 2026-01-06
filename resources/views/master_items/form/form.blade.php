@@ -48,6 +48,23 @@
         </select>
     </div>
 
+    @php
+        $selectedKategoris = [];
+        if (!empty($item) && is_object($item) && isset($item->kategoris)) {
+            $selectedKategoris = $item->kategoris->pluck('id')->toArray();
+        }
+    @endphp
+
+    <div class="form-group">
+        <label>Kategori</label>
+        <select class="form-control" name="kategori[]" multiple>
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" @if(in_array($cat->id, $selectedKategoris)) selected @endif>{{ $cat->nama }} ({{ $cat->kode }})</option>
+            @endforeach
+        </select>
+        <small class="form-text text-muted">Tahan Ctrl (Cmd) untuk memilih banyak kategori.</small>
+    </div>
+
     <div class="form-group">
         <label>Foto</label>
         @if(!empty($item->foto))

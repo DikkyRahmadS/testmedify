@@ -53,6 +53,19 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                            <th>Kategori</th>
+                            <td>:</td>
+                            <td>
+                                @if(!empty($data->kategoris) && count($data->kategoris) > 0)
+                                    @foreach($data->kategoris as $cat)
+                                        <span class="badge bg-secondary">{{ $cat->nama }}</span>
+                                    @endforeach
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
                     </table>
                     <a class="btn btn-info" href="{{url('master-items/form/edit')}}/{{$data->id}}">Edit</a>
                     <a class="btn btn-danger" href="{{url('master-items/delete')}}/{{$data->id}}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>

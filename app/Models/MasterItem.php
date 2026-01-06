@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Kategori;
 
 class MasterItem extends Model
 {
@@ -20,4 +21,9 @@ class MasterItem extends Model
         'jenis',
         'foto',
     ];
+
+    public function kategoris()
+    {
+        return $this->belongsToMany(Kategori::class, 'kategori_master_item', 'master_item_id', 'kategori_id');
+    }
 }
